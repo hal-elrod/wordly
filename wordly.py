@@ -1,17 +1,28 @@
+"""A command-line tool to help solve Wordle puzzles.
+
+This script provides a simple interactive solver for the popular word game Wordle.
+It suggests the best word to guess next based on letter frequency and filters
+the list of possible words based on user feedback about correct letters,
+incorrect letters, and letters in the wrong position.
+"""
 # Wordle Solver
 # quick and dirty wordle solver. Very picky about input format - HCE
 import pandas as pd
 from collections import Counter
 
 def nextword(df):
-    """
-    This function calculates the next word to be proposed in the Wordle game.
+    """Calculates the best word to guess next.
 
-    Parameters:
-    df (DataFrame): The DataFrame containing the words to be considered.
+    This function analyzes the remaining possible words and suggests the
+    one that is most likely to narrow down the options, based on letter
+    frequency.
+
+    Args:
+        df (pd.DataFrame): A DataFrame containing the list of possible words.
+            It must have a 'word' column.
 
     Returns:
-    str: The proposed word for the next round of the game.
+        str: The suggested word to play next.
     """
     # Create a list of all letters in the words
     letterlist = [char for word in df.word for char in word]
@@ -26,11 +37,15 @@ def nextword(df):
     return proposal
 
 def wordle(df):
-    """
-    This function runs the Wordle game.
+    """Runs the interactive Wordle solver game.
 
-    Parameters:
-    df (DataFrame): The DataFrame containing the words to be considered.
+    This function guides the user through the process of solving a Wordle
+    puzzle by repeatedly suggesting the best next word and filtering the
+    word list based on user feedback.
+
+    Args:
+        df (pd.DataFrame): A DataFrame containing the initial list of
+            possible words. It must have a 'word' column.
     """
     # Continue the game until there is only one word left
     while len(df) > 1:
@@ -60,7 +75,9 @@ def wordle(df):
         print(df)
 
 if __name__ == '__main__':
-    # Load the words from a text file into a DataFrame
+    # Main execution block
+    # This part of the script runs when it is executed directly. It loads the
+    # word list from 'words.txt' into a pandas DataFrame and then starts the
+    # interactive Wordle solver.
     df = pd.read_fwf('words.txt', names=['word'], header=None, converters={'word': str})
-    # Start the Wordle game
     wordle(df)
